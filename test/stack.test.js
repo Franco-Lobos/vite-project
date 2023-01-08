@@ -3,7 +3,6 @@ class Screen {
         this.dim = dim;
         this.matrix=[];
         this._setMatrix();
-        // this._switcher([0,0],[10,10],1)
     }
   
     _setMatrix(){
@@ -105,5 +104,12 @@ describe('change light status', ()=>{
         })
 
     })
+
+    it('switch', ()=>{
+        expect((screen._switch(1))).toBe(0);
+        expect((screen._switch(0))).toBe(1);
+        expect(screen._switch(screen._switch(1))).toBe(1);
+        expect(screen._switch(screen._switch(0))).toBe(0);
+    });
 
 })
