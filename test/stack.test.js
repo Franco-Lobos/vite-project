@@ -1,13 +1,17 @@
 class Screen {
-    constructor(dim = -1){
+    constructor(dim=10){
         this.dim = dim;
         this.matrix=[];
-        // this._setMatrix();
+        this._setMatrix();
     }
   
     _setMatrix(){
-        this.matrix.push(this.dim*[this.dim*[0]]);
-  
+        for(let i= 0; i< this.dim; i++){
+            this.matrix.push([]);
+            for(let j= 0; j< this.dim; j++){
+                this.matrix[i].push([0]);
+            }
+        }
     }
   }
   
@@ -15,16 +19,33 @@ class Screen {
   
 describe('create matrix', ()=>{
 
+    let screen;
+
+    beforeEach(()=>{
+        screen = new Screen();
+    })
+
     it('Screen fields', ()=>{
-        const testScreen = new Screen();
-        expect(testScreen.dim).toBe(-1);
-        expect(testScreen.matrix).toEqual([]);
+        expect(screen.dim).toBeTruthy();
+        expect(screen.matrix).toBeTruthy();
     });
-    
 
-    // it('it is array');
+    //AFTER CREATE A MATRIX
+    it('it is array', ()=>{
+        expect(screen.matrix).toEqual(expect.arrayContaining([]));
+    });
 
-    // it('it is bidimentional');
+    it('it is bidimentional', ()=>{
+        screen.matrix.forEach(element => {
+            expect(element).toEqual(expect.arrayContaining([]));
+        });
+    });
 
-    // it('all values are cero');
+    it('all values are cero',()=>{
+        screen.matrix.forEach((element, indx) => {
+            element.forEach((array)=>{
+                expect(array).toEqual(expect.arrayContaining([0]));
+            })
+        });
+    });
 })
