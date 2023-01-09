@@ -1,17 +1,20 @@
 export default class Screen {
     constructor(dim=10){
         this.dim = dim;
-        this.matrix=[];
-        this._setMatrix();
+        this.matrix=this._setMatrix();
+        this.brigthness = this._setMatrix();
+
     }
   
     _setMatrix(){
+        const returner=[];
         for(let i= 0; i< this.dim; i++){
-            this.matrix.push([]);
+            returner.push([]);
             for(let j= 0; j< this.dim; j++){
-                this.matrix[i].push(0);
+                returner[i].push(0);
             }
         }
+        return returner;
     }
 
     _switch(bool){
@@ -30,10 +33,28 @@ export default class Screen {
         for(let i = x1; i<= x2; i++){
             for(let j = y1; j<= y2; j++){
                 this.matrix[i][j]= value!== undefined ? value: this._switch(this.matrix[i][j]);
+                this.brigthness[i][j] = this._brigthnessManager(this.brigthness[i][j], value);
             }
         }
     }
     
+    _brigthnessManager(data, operator){
+        if(data === 0 && operator === 0){
+            return data;
+        }   
+
+        if(operator===undefined){
+            return data+2;
+        }
+        if(operator===1){
+            return data+1;
+        }
+        if(operator===0){
+            return data-1;
+        }     
+
+    }
+
     turnOn(vect1,vect2){
         this._switcher(vect1,vect2,1);
     }
@@ -47,15 +68,19 @@ export default class Screen {
     }
 
     countOn(){
-        let counter = 0;
         let dim = this.dim;
+        let counter = 0;
+        let brigthness = 0;
         for(let i = 0; i< dim; i++){
             for(let j = 0; j< dim; j++){
-                if(this.matrix[i][j] === 1 ){
+                if(this.matrix[i][j]){
                     counter++;
+                }
+                if(this.brigthness[i][j]){
+                    brigthness+= this.brigthness[i][j];
                 }
             }
         }
-        return counter;
+        return [counter, brigthness];
     }
   }
