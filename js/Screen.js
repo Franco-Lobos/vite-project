@@ -1,9 +1,8 @@
-class Screen {
+export default class Screen {
     constructor(dim=10){
         this.dim = dim;
         this.matrix=[];
         this._setMatrix();
-        // this._switcher([0,0],[10,10],1)
     }
   
     _setMatrix(){
@@ -36,14 +35,27 @@ class Screen {
     }
     
     turnOn(vect1,vect2){
-        _switcher(vect1,vect2,1);
+        this._switcher(vect1,vect2,1);
     }
 
-    turnOf(vect1,vect2){
-        _switcher(vect1,vect2,0);
+    turnOff(vect1,vect2){
+        this._switcher(vect1,vect2,0);
     }
     
-    switch(vect1,vect2){
-        _switcher(vect1,vect2);
+    toggle(vect1,vect2){
+        this._switcher(vect1,vect2);
+    }
+
+    countOn(){
+        let counter = 0;
+        let dim = this.dim;
+        for(let i = 0; i< dim; i++){
+            for(let j = 0; j< dim; j++){
+                if(this.matrix[i][j] === 1 ){
+                    counter++;
+                }
+            }
+        }
+        return counter;
     }
   }

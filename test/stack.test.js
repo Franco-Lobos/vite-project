@@ -1,17 +1,20 @@
 class Screen {
     constructor(dim=10){
         this.dim = dim;
-        this.matrix=[];
-        this._setMatrix();
+        this.matrix=this._setMatrix();
+        this.brigthness = this._setMatrix();
+
     }
   
     _setMatrix(){
+        const returner=[];
         for(let i= 0; i< this.dim; i++){
-            this.matrix.push([]);
+            returner.push([]);
             for(let j= 0; j< this.dim; j++){
-                this.matrix[i].push(0);
+                returner[i].push(0);
             }
         }
+        return returner;
     }
 
     _switch(bool){
@@ -38,14 +41,27 @@ class Screen {
         _switcher(vect1,vect2,1);
     }
 
-    turnOf(vect1,vect2){
+    turnOff(vect1,vect2){
         _switcher(vect1,vect2,0);
     }
     
-    switch(vect1,vect2){
+    toggle(vect1,vect2){
         _switcher(vect1,vect2);
     }
+
+    countOn(){
+        let counter;
+        for(let i = x1; i<= x2; i++){
+            for(let j = y1; j<= y2; j++){
+                if(this.matrix[i][j]){
+                    counter++;
+                }
+            }
+        }
+        return counter;
+    }
   }
+
 
 //Testing
 let screen = new Screen();
@@ -113,3 +129,5 @@ describe('change light status', ()=>{
     });
 
 })
+
+
