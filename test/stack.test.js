@@ -33,32 +33,51 @@ class Screen {
         for(let i = x1; i<= x2; i++){
             for(let j = y1; j<= y2; j++){
                 this.matrix[i][j]= value!== undefined ? value: this._switch(this.matrix[i][j]);
+                this.brigthness[i][j] = this._brigthnessManager(this.brigthness[i][j], value);
             }
         }
     }
     
+    _brigthnessManager(data, operator){
+        if(data === operator === 0){
+            return data;
+        }   
+        if(operator===1){
+            return data+1;
+        }
+        if(operator===0){
+            return data-1;
+        }     
+
+        return data+2;
+    }
+
     turnOn(vect1,vect2){
-        _switcher(vect1,vect2,1);
+        this._switcher(vect1,vect2,1);
     }
 
     turnOff(vect1,vect2){
-        _switcher(vect1,vect2,0);
+        this._switcher(vect1,vect2,0);
     }
     
     toggle(vect1,vect2){
-        _switcher(vect1,vect2);
+        this._switcher(vect1,vect2);
     }
 
     countOn(){
-        let counter;
-        for(let i = x1; i<= x2; i++){
-            for(let j = y1; j<= y2; j++){
+        let counter = 0;
+        let brigthness = 0;
+        for(let i = 0; i< dim; i++){
+            for(let j = 0; j< dim; j++){
                 if(this.matrix[i][j]){
                     counter++;
                 }
+                if(this.brigthness[i][j]){
+                    brigthness+= this.brigthness[i][j];
+                }
             }
         }
-        return counter;
+        return [counter, brigthness];
     }
   }
 
@@ -114,8 +133,8 @@ describe('change light status', ()=>{
 
         screen._switcher([0,0],[dimIndx,dimIndx]);
         defaultMatrix.forEach((x,xIndx)=>{
-            x.forEach((y)=>{
-                expect(screen.matrix[xIndx][y]).not.toEqual(defaultMatrix[xIndx][y]);
+            x.forEach((y, yIndx)=>{
+                expect(screen.matrix[xIndx][yIndx]).not.toEqual(y);
             })
         })
 
@@ -127,7 +146,84 @@ describe('change light status', ()=>{
         expect(screen._switch(screen._switch(1))).toBe(1);
         expect(screen._switch(screen._switch(0))).toBe(0);
     });
+})
 
+describe('brigtness', ()=>{  
+    let screen;
+    beforeEach(()=>{
+        screen = new Screen();
+    });
+
+    it('increase brigtness', ()=>{
+        let dimIndx = screen.dim-1;
+        screen.turnOn(dimIndx,dimIndx);
+        screen.matrix.forEach((x,xIndx)=>{
+            x.forEach((y, yIndx)=>{
+                expect(screen.brigthness[xIndx][yIndx]).toEqual(y);
+            })
+        })
+    })
+
+    it('increase x2 brigtness', ()=>{
+        let dimIndx = screen.dim-1;
+        screen.turnOn(dimIndx,dimIndx);
+        screen.turnOn(dimIndx,dimIndx);
+
+        screen.matrix.forEach((x,xIndx)=>{
+            x.forEach((y, yIndx)=>{
+                expect(screen.brigthness[xIndx][yIndx]).toEqual(y*2);
+            })
+        })
+    })
+
+    it('increase x2 (toggle) brigtness', ()=>{
+        let dimIndx = screen.dim-1;
+        screen.toggle(dimIndx,dimIndx);
+
+        screen.matrix.forEach((x,xIndx)=>{
+            x.forEach((y, yIndx)=>{
+                expect(screen.brigthness[xIndx][yIndx]).toEqual(y*2);
+            })
+        })
+    })
+
+    it('increase an decrease', ()=>{
+        let dimIndx = screen.dim-1;
+        screen.turnOn(dimIndx,dimIndx);
+        screen.turnOn(dimIndx,dimIndx);
+        screen.turnOff(dimIndx,dimIndx);
+
+        screen.matrix.forEach((x,xIndx)=>{
+            x.forEach((y, yIndx)=>{
+                expect(screen.brigthness[xIndx][yIndx]).toEqual(y);
+            })
+        })
+    })
+
+    it('decrease', ()=>{
+        let dimIndx = screen.dim-1;
+        screen.turnOn(dimIndx,dimIndx);
+        screen.turnOn(dimIndx,dimIndx);
+        screen.turnOff(dimIndx,dimIndx);
+
+        screen.matrix.forEach((x,xIndx)=>{
+            x.forEach((y, yIndx)=>{
+                expect(screen.brigthness[xIndx][yIndx]).toEqual(y);
+            })
+        })
+    })
+
+    it('decrease limit 0', ()=>{
+        let dimIndx = screen.dim-1;
+        screen.turnOff(dimIndx,dimIndx);
+        screen.turnOff(dimIndx,dimIndx);
+
+        screen.matrix.forEach((x,xIndx)=>{
+            x.forEach((y, yIndx)=>{
+                expect(screen.brigthness[xIndx][yIndx]).toEqual(y);
+            })
+        })
+    })
 })
 
 
